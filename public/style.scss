@@ -1,0 +1,47 @@
+body,
+html {
+  height: 100vh;
+  width: 100vw;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #333333;
+  font-family: 'Source Code Pro', monospace;
+  @media (max-width: 800px) {
+    background-color: #000000;
+  }
+  @media (min-width: 801px) {
+    background-color: #333333;
+  }
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+.canvas {
+  background-color: #000000;
+  margin: 0 auto;
+  display: block;
+  @media (max-width: 800px) {
+    width: 100vw;
+  }
+  @media (min-width: 801px) {
+    width: 800px;
+    height: 100vh;
+  }
+}
+
+.fonted {
+  visibility: hidden;
+  height: 0;
+  font-size: 0;
+}
