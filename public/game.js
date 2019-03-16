@@ -3,7 +3,7 @@
  */
 
 import Skull from './skull.js';
-import TitleScreen from './title-screen.js';
+import TitleScreen from './screens/title-screen.js';
 import Header from './header.js';
 import ControlButton from './control-button.js';
 import ScoreDisplay from './score-display.js';
@@ -64,7 +64,11 @@ export default class Game {
 
     // game screens
     this.screens = {
-      titleScreen: new TitleScreen(this.canvas.width)
+      titleScreen: new TitleScreen(
+        this.ctx,
+        this.canvas.width,
+        this.config.isSmallScreen
+      )
     };
 
     // the skulls
@@ -76,6 +80,7 @@ export default class Game {
       currentScreen: 'title',
       isPaused: false,
       lastTickTime: 0,
+      mode: 'basic',
       pauseTimestamp: 0,
       score: 0,
       skullFallSpeed: 10
@@ -149,16 +154,45 @@ export default class Game {
     }
   }
 
+  titleTouchStartEvents(evt) {
+    if (this.state.currentScreen === 'title') {
+      const modeSelection = this.screens.titleScreen.modeWasTouched(
+        this.state.clickPoint
+      );
+      if (modeSelection.wasTouched) {
+        this.state.mode = modeSelection.mode;
+        this.state.currentScreen = 'game';
+      }
+    }
+  }
+
   addEventListeners() {
     if (this.state.currentScreen === 'title') {
-      document.onkeydown = evt => {
-        if (evt.keyCode === 13) {
-          this.state.currentScreen = 'game';
+      document.onkeyup = evt => {
+        // if (evt.keyCode === 13) {
+        //   this.state.currentScreen = 'game';
+        // }
+        if (evt.keyCode === 38 || evt.keyCode === 40) {
+          if (this.state.mode === 'basic') {
+            this.state.mode = 'challenge';
+            this.screens.titleScreen.arrow.yPos += this.config.isSmallScreen
+              ? 20
+              : 40;
+          } else {
+            this.screens.titleScreen.arrow.yPos -= this.config.isSmallScreen
+              ? 20
+              : 40;
+            this.state.mode = 'basic';
+          }
         }
       };
-      this.canvas.addEventListener('touchstart', evt => {
-        this.state.currentScreen = 'game';
-      });
+      // this.canvas.addEventListener('touchstart', evt => {
+      //   this.state.clickPoint = getClickPoint(evt);
+      //   // this.state.currentScreen = 'game';
+      //   if (this.screens.titleScreen.modeWasTouched(this.state.clickPoint)) {
+      //     console.log('here');
+      //   }
+      // });
     }
     this.canvas.addEventListener('click', evt => {
       this.gameClickEvents(this.state.clickPoint);
@@ -171,6 +205,7 @@ export default class Game {
       this.state.clickPoint = getClickPoint(evt);
       this.gameClickEvents(this.state.clickPoint);
       this.gameMouseDownEvents(this.state.clickPoint);
+      this.titleTouchStartEvents(this.state.clickPoint);
     });
     this.canvas.addEventListener('mousemove', evt => {
       this.gameMouseMoveEvents(evt);
@@ -231,8 +266,6 @@ export default class Game {
   }
 
   startGame() {
-    // Clear the canvas
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     // Draw components and skulls
     this.components.fire.draw(
       this.ctx,
@@ -254,6 +287,8 @@ export default class Game {
   }
 
   render() {
+    // Clear the canvas
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     switch (this.state.currentScreen) {
       case 'game': {
         this.startGame();
@@ -265,7 +300,11 @@ export default class Game {
         break;
       }
       default: {
-        this.screens.titleScreen.load(this.ctx, this.config.isSmallScreen);
+        this.screens.titleScreen.load(
+          this.ctx,
+          this.config.isSmallScreen,
+          this.config.isSmallScreen
+        );
       }
     }
   }
