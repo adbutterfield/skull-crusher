@@ -10,6 +10,7 @@ export default class Fire {
     this.imageData = ctx.getImageData(0, 0, canvasWidth, canvasHeight);
     this.data = this.imageData.data;
     this.fire = [];
+    this.sfx = new Audio('./sounds/fire-1.wav');
     // init fire array
     for (let i = 0; i < canvasWidth * canvasHeight; i++) {
       this.fire[i] = 0;

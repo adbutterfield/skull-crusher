@@ -53,9 +53,6 @@ export default class Game {
     // canvas context
     this.ctx = this.canvas.getContext('2d');
 
-    // the skulls
-    this.skulls = {};
-
     // display components
     this.components = {
       controlButton: new ControlButton(this.canvas.width),
@@ -69,6 +66,9 @@ export default class Game {
     this.screens = {
       titleScreen: new TitleScreen(this.canvas.width)
     };
+
+    // the skulls
+    this.skulls = {};
 
     // game state
     this.state = {
@@ -84,7 +84,7 @@ export default class Game {
     // initialize event listeners
     this.addEventListeners();
     // Start skull factory
-    this.addSkull();
+    this.addSkulls();
   }
 
   // Events
@@ -112,14 +112,10 @@ export default class Game {
         Object.keys(this.skulls).length > 0 &&
         clickPoint.yPos > this.config.headerHeight
       ) {
-        // Clone the skulls at the time of the click to check agains.
-        // Ensures check made against skull position at time of click.
-        const skullClones = JSON.parse(JSON.stringify(this.skulls));
-        Object.values(skullClones).forEach(skullClone => {
-          // Cloned skulls using the JSON trick lose their methods.
-          // Need to call wasClicked on a skull instance, and pass the cloned skull.
+        Object.values(this.skulls).forEach(skullClone => {
           if (skullWasClicked(clickPoint, skullClone)) {
             this.state.score += skullClone.pointValue;
+            skullClone.sfx.play();
             delete this.skulls[skullClone.id];
           }
         });
@@ -198,7 +194,7 @@ export default class Game {
     );
   }
 
-  addSkull() {
+  addSkulls() {
     setInterval(() => {
       if (this.state.currentScreen === 'game' && !this.state.isPaused) {
         const skulls = Object.values(this.skulls);
@@ -261,6 +257,11 @@ export default class Game {
     switch (this.state.currentScreen) {
       case 'game': {
         this.startGame();
+        if (this.state.isPaused) {
+          this.components.fire.sfx.pause();
+        } else {
+          this.components.fire.sfx.play();
+        }
         break;
       }
       default: {
