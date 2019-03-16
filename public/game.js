@@ -165,16 +165,13 @@ export default class Game {
       });
     }
     this.canvas.addEventListener('click', evt => {
-      console.log('click');
       this.gameClickEvents(this.state.clickPoint);
     });
     this.canvas.addEventListener('mousedown', evt => {
-      console.log('mousedown');
       this.state.clickPoint = getClickPoint(evt);
       this.gameMouseDownEvents(this.state.clickPoint);
     });
     this.canvas.addEventListener('touchstart', evt => {
-      console.log('touchstart');
       this.state.clickPoint = getClickPoint(evt);
       this.gameClickEvents(this.state.clickPoint);
       this.gameMouseDownEvents(this.state.clickPoint);
