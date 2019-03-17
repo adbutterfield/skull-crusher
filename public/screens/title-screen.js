@@ -2,7 +2,7 @@
  * Class representing title screen
  */
 
-import config from './config.js';
+import config from '../config.js';
 
 export default class TitleScreen {
   constructor(canvasWidth) {
@@ -27,7 +27,7 @@ export default class TitleScreen {
     );
 
     let img = new Image();
-    img.src = '../assets/spider-web.svg';
+    img.src = '/assets/spider-web.svg';
     ctx.drawImage(
       img,
       isSmallScreen ? -40 : -80,

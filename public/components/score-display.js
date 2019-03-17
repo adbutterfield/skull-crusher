@@ -2,7 +2,7 @@
  * Class for score display component
  */
 
-import config from './config.js';
+import config from '../config.js';
 
 export default class ScoreDisplay {
   constructor() {

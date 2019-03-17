@@ -2,7 +2,7 @@
  * Class for pause/resume game control component
  */
 
-import config from './config.js';
+import config from '../config.js';
 
 export default class ControlButton {
   constructor(canvasWidth) {
@@ -26,7 +26,7 @@ export default class ControlButton {
     ctx.fillStyle = config.textColor;
     ctx.fillText(displayText, this.text.xPos, this.text.yPos);
     let img = new Image();
-    img.src = `../assets/${isPaused ? 'play' : 'pause'}.svg`;
+    img.src = `/assets/${isPaused ? 'play' : 'pause'}.svg`;
     ctx.drawImage(
       img,
       this.image.xPos,

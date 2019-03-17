@@ -2,7 +2,7 @@
  * Class for header component
  */
 
-import config from './config.js';
+import config from '../config.js';
 
 export default class Header {
   constructor(canvasWidth, height) {

@@ -3,12 +3,12 @@
  */
 
 import Skull from './skull.js';
-import TitleScreen from './title-screen.js';
-import Header from './header.js';
-import ControlButton from './control-button.js';
-import ScoreDisplay from './score-display.js';
-import SpeedSlider from './speed-slider.js';
-import Fire from './fire.js';
+import TitleScreen from './screens/title-screen.js';
+import Header from './components/header.js';
+import ControlButton from './components/control-button.js';
+import ScoreDisplay from './components/score-display.js';
+import SpeedSlider from './components/speed-slider.js';
+import Fire from './components/fire.js';
 
 function getClickPoint(evt) {
   let clickPoint = {};
