@@ -26,6 +26,8 @@ export default class ControlButton {
     ctx.fillStyle = config.textColor;
     ctx.fillText(displayText, this.text.xPos, this.text.yPos);
     let img = new Image();
+    img.height = this.size;
+    img.width = this.size;
     img.src = `/assets/${isPaused ? 'play' : 'pause'}.svg`;
     ctx.drawImage(
       img,

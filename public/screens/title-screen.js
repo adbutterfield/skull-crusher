@@ -27,6 +27,8 @@ export default class TitleScreen {
     );
 
     let img = new Image();
+    img.height = isSmallScreen ? 120 : 200;
+    img.width = isSmallScreen ? 120 : 200;
     img.src = '/assets/spider-web.svg';
     ctx.drawImage(
       img,

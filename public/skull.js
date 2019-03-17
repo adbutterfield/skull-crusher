@@ -36,6 +36,7 @@ class Skull {
     this.yPos = headerHeight - this.size;
     this.lastTickTime = lastTickTime;
     this.offset = 0;
+    this.moveButter = 0;
     this.sfx = {
       crunch: new Audio('./sounds/crunch02.mp3'),
       burn: new Audio('./sounds/burn.wav')
@@ -45,6 +46,8 @@ class Skull {
 
   draw(ctx) {
     let img = new Image();
+    img.height = this.size;
+    img.width = this.size;
     img.src = '../assets/skull.svg';
     ctx.drawImage(img, this.xPos, this.yPos, this.size, this.size);
   }
@@ -54,9 +57,15 @@ class Skull {
     this.offset = !isPaused ? this.offset : pausedTimestamp - thisTickTime;
     if (!isPaused) {
       // pixels to move = milliseconds since last move * speed per 1000 milliseconds
-      this.yPos +=
+      this.moveButter +=
         (thisTickTime - this.lastTickTime + this.offset) * (fallSpeed / 1000);
       this.lastTickTime = thisTickTime;
+      // Only move in whole pixel values
+      const pxToMove = Math.floor(this.moveButter);
+      if (pxToMove > 0) {
+        this.yPos += pxToMove;
+        this.moveButter -= pxToMove;
+      }
       // Need to reset after restarting after a pause.
       this.offset = 0;
     }
