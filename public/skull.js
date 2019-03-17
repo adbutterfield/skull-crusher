@@ -36,8 +36,11 @@ class Skull {
     this.yPos = headerHeight - this.size;
     this.lastTickTime = lastTickTime;
     this.offset = 0;
-    this.sfx = new Audio('./sounds/crunch02.mp3');
-    this.sfx.volume = 0.1;
+    this.sfx = {
+      crunch: new Audio('./sounds/crunch02.mp3'),
+      burn: new Audio('./sounds/burn.wav')
+    };
+    this.sfx.crunch.volume = 0.1;
   }
 
   draw(ctx) {

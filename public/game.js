@@ -121,7 +121,7 @@ export default class Game {
         Object.values(this.skulls).forEach(skull => {
           if (skullWasClicked(clickPoint, skull)) {
             this.state.score += skull.pointValue;
-            skull.sfx.play();
+            skull.sfx.crunch.play();
             this.displayScores[skull.id] = {
               id: skull.id,
               pointValue: skull.pointValue,
@@ -166,6 +166,8 @@ export default class Game {
     if (this.state.currentScreen === 'title') {
       document.onkeydown = evt => {
         if (evt.keyCode === 13) {
+          // Reset the fire sfx
+          this.components.fire.sfx.volume = 1;
           this.state.currentScreen = 'game';
         }
       };
@@ -237,6 +239,7 @@ export default class Game {
         );
         // Remove if out of bounds
         if (skull.yPos >= this.canvas.height + skull.size) {
+          skull.sfx.burn.play();
           delete this.skulls[skull.id];
           this.state.life -= 1;
           if (!this.state.life) {
@@ -291,8 +294,6 @@ export default class Game {
       this.canvas.width / 2,
       this.config.isSmallScreen ? 200 : 300
     );
-    // Stop the fire sfx
-    this.components.fire.sfx.pause();
     if (this.state.lastTickTime - this.state.gameOverTime >= 5000) {
       // Reset skulls, life and score
       this.state.skullFallSpeed = 10;
@@ -301,6 +302,8 @@ export default class Game {
       this.state.score = 0;
       // Reset the speed slider
       this.components.speedSlider.reset();
+      // Mute the fire sfx
+      this.components.fire.sfx.volume = 0;
       // Go back to title screen
       this.state.currentScreen = 'title';
     }
