@@ -1,5 +1,5 @@
 /**
- * Class for speed slider component
+ * Class for life gauge component
  */
 
 import config from '../config.js';

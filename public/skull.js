@@ -50,7 +50,6 @@ class Skull {
   }
 
   move(fallSpeed, thisTickTime, isPaused, pausedTimestamp) {
-    // Get the current time. (Date is not so accurate to use here)
     // In order to restart after a pause, we need to keep track of this offset
     this.offset = !isPaused ? this.offset : pausedTimestamp - thisTickTime;
     if (!isPaused) {
