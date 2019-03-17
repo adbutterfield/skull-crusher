@@ -12,6 +12,7 @@ export default class SpeedSlider {
       height: 14
     };
     this.dot = {
+      defaultXPos: canvasWidth - 120,
       xPos: canvasWidth - 120,
       yPos: 45,
       size: 5
@@ -51,6 +52,10 @@ export default class SpeedSlider {
         (clickPoint.yPos - this.dot.yPos) ** 2 <
       (this.dot.size * 2) ** 2
     );
+  }
+
+  reset() {
+    this.dot.xPos = this.dot.defaultXPos;
   }
 
   updateSlider(newXPos) {
