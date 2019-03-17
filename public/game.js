@@ -215,7 +215,11 @@ export default class Game {
   }
 
   addSkulls() {
-    if (this.state.currentScreen === 'game' && !this.state.isPaused) {
+    if (
+      this.state.currentScreen === 'game' &&
+      this.state.life > 0 &&
+      !this.state.isPaused
+    ) {
       if (this.state.lastTickTime - this.state.lastSkullCreateTime >= 1000) {
         const skulls = Object.values(this.skulls);
         if (skulls.length === 0) {
