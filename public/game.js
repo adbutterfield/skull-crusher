@@ -97,7 +97,10 @@ export default class Game {
   gameClickEvents(clickPoint) {
     if (this.state.currentScreen === 'game') {
       // Click event for the pause/resume button
-      if (this.components.controlButton.wasClicked(clickPoint)) {
+      if (
+        this.state.life > 0 &&
+        this.components.controlButton.wasClicked(clickPoint)
+      ) {
         this.state.isPaused = !this.state.isPaused;
         this.state.pauseTimestamp = this.state.isPaused
           ? this.state.lastTickTime
@@ -110,10 +113,12 @@ export default class Game {
       }
 
       // Click event for skulls
+      // Don't run check if game is over.
       // Don't run check if paused.
       // Don't need to run check if there's no skulls.
       // Don't allow skulls to pop when clicked in the header.
       if (
+        this.state.life > 0 &&
         !this.state.isPaused &&
         Object.keys(this.skulls).length > 0 &&
         clickPoint.yPos > this.config.headerHeight
@@ -295,11 +300,12 @@ export default class Game {
       this.config.isSmallScreen ? 200 : 300
     );
     if (this.state.lastTickTime - this.state.gameOverTime >= 5000) {
-      // Reset skulls, life and score
+      // Reset game state
       this.state.skullFallSpeed = 10;
       this.skulls = {};
       this.state.life = 10;
       this.state.score = 0;
+      this.state.isPaused = false;
       // Reset the speed slider
       this.components.speedSlider.reset();
       // Mute the fire sfx
