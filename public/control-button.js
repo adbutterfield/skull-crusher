@@ -44,13 +44,4 @@ export default class ControlButton {
       clickPoint.yPos <= this.image.yPos + this.image.size
     );
   }
-
-  preloadImages(ctx) {
-    let playImg = new Image();
-    playImg.src = '../assets/play.svg';
-    ctx.drawImage(playImg, -1, -1, 1, 1);
-    let pauseImg = new Image();
-    pauseImg.src = '../assets/pause.svg';
-    ctx.drawImage(pauseImg, -1, -1, 1, 1);
-  }
 }

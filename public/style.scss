@@ -11,8 +11,6 @@ html {
 }
 
 body {
-  background-color: #333333;
-  font-family: 'Source Code Pro', monospace;
   @media (max-width: 800px) {
     background-color: #000000;
   }
@@ -40,7 +38,15 @@ body {
   }
 }
 
-.fonted {
+.font1 {
+  font-family: 'Source Code Pro', monospace;
+  visibility: hidden;
+  height: 0;
+  font-size: 0;
+}
+
+.font2 {
+  font-family: 'Creepster';
   visibility: hidden;
   height: 0;
   font-size: 0;

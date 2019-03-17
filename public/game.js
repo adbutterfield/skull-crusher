@@ -270,17 +270,9 @@ export default class Game {
     }
   }
 
-  preloadImages() {
-    this.components.controlButton.preloadImages(this.ctx);
-    let img = new Image();
-    img.src = '../assets/skull.svg';
-    this.ctx.drawImage(img, -1, -1, 1, 1);
-  }
-
   run(dTime) {
     this.state.lastTickTime = dTime;
     window.requestAnimationFrame(dTime => this.run(dTime));
-    this.preloadImages();
     this.update();
     this.render();
   }
