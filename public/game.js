@@ -10,6 +10,7 @@ import ScoreDisplay from './components/score-display.js';
 import SpeedSlider from './components/speed-slider.js';
 import Fire from './components/fire.js';
 import LifeGauge from './components/life-gauge.js';
+import config from './config.js';
 
 function getClickPoint(evt) {
   let clickPoint = {};
@@ -64,6 +65,9 @@ export default class Game {
       lifeGauge: new LifeGauge(this.ctx)
     };
 
+    // skull score to display after destroying
+    this.displayScores = {};
+
     // game screens
     this.screens = {
       titleScreen: new TitleScreen(this.canvas.width)
@@ -114,11 +118,18 @@ export default class Game {
         Object.keys(this.skulls).length > 0 &&
         clickPoint.yPos > this.config.headerHeight
       ) {
-        Object.values(this.skulls).forEach(skullClone => {
-          if (skullWasClicked(clickPoint, skullClone)) {
-            this.state.score += skullClone.pointValue;
-            skullClone.sfx.play();
-            delete this.skulls[skullClone.id];
+        Object.values(this.skulls).forEach(skull => {
+          if (skullWasClicked(clickPoint, skull)) {
+            this.state.score += skull.pointValue;
+            skull.sfx.play();
+            this.displayScores[skull.id] = {
+              id: skull.id,
+              pointValue: skull.pointValue,
+              xPos: skull.xPos + skull.size / 2,
+              yPos: skull.yPos + skull.size / 2,
+              time: this.state.lastTickTime
+            };
+            delete this.skulls[skull.id];
           }
         });
       }
@@ -233,6 +244,19 @@ export default class Game {
     });
   }
 
+  drawScores() {
+    Object.values(this.displayScores).forEach(score => {
+      if (this.state.lastTickTime - score.time <= 500) {
+        this.ctx.textAlign = 'start';
+        this.ctx.font = `20px ${config.font}`;
+        this.ctx.fillStyle = config.scoreColor;
+        this.ctx.fillText(`+${score.pointValue}`, score.xPos, score.yPos);
+      } else {
+        delete this.displayScores[score.id];
+      }
+    });
+  }
+
   startGame() {
     // Draw components and skulls
     this.components.fire.draw(
@@ -247,6 +271,7 @@ export default class Game {
     if (this.state.life === 0) {
       this.gameOver();
     }
+    this.drawScores();
     this.components.header.draw(this.ctx, this.canvas.width);
     this.components.scoreDisplay.draw(this.ctx, this.state.score);
     this.components.speedSlider.draw(this.ctx);
