@@ -75,6 +75,7 @@ export default class Game {
       clickPoint: {},
       currentScreen: 'title',
       isPaused: false,
+      lastSkullCreateTime: 0,
       lastTickTime: 0,
       pauseTimestamp: 0,
       score: 0,
@@ -83,8 +84,6 @@ export default class Game {
 
     // initialize event listeners
     this.addEventListeners();
-    // Start skull factory
-    this.addSkulls();
   }
 
   // Events
@@ -195,8 +194,8 @@ export default class Game {
   }
 
   addSkulls() {
-    setInterval(() => {
-      if (this.state.currentScreen === 'game' && !this.state.isPaused) {
+    if (this.state.currentScreen === 'game' && !this.state.isPaused) {
+      if (this.state.lastTickTime - this.state.lastSkullCreateTime >= 1000) {
         const skulls = Object.values(this.skulls);
         if (skulls.length === 0) {
           const newSkull = this.createSkull();
@@ -204,13 +203,13 @@ export default class Game {
         }
         const lastSkull = skulls[skulls.length - 1];
         // Don't add skulls on top of each other.
-        // And add some randomness to rate of fall.
         if (lastSkull && lastSkull.yPos >= lastSkull.size) {
           const newSkull = this.createSkull();
           this.skulls[newSkull.id] = newSkull;
         }
+        this.state.lastSkullCreateTime = this.state.lastTickTime;
       }
-    }, 1000);
+    }
   }
 
   updateSkulls() {
@@ -251,6 +250,7 @@ export default class Game {
 
   update() {
     this.updateSkulls();
+    this.addSkulls();
   }
 
   render() {

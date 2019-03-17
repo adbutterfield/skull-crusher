@@ -21,5 +21,7 @@ const game = new Game();
 
 preloadImages(() => {
   // Kick off main game loop
-  game.run(window.performance.now());
+  const firstGameTime = window.performance.now();
+  game.state.lastSkullCreateTime = firstGameTime;
+  game.run(firstGameTime);
 });
