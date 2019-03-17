@@ -9,6 +9,7 @@ import ControlButton from './components/control-button.js';
 import ScoreDisplay from './components/score-display.js';
 import SpeedSlider from './components/speed-slider.js';
 import Fire from './components/fire.js';
+import LifeGauge from './components/life-gauge.js';
 
 function getClickPoint(evt) {
   let clickPoint = {};
@@ -59,7 +60,8 @@ export default class Game {
       header: new Header(this.canvas.width, this.config.headerHeight),
       fire: new Fire(this.ctx, this.canvas.width, this.canvas.height),
       scoreDisplay: new ScoreDisplay(),
-      speedSlider: new SpeedSlider()
+      speedSlider: new SpeedSlider(this.canvas.width),
+      lifeGauge: new LifeGauge(this.ctx)
     };
 
     // game screens
@@ -77,6 +79,7 @@ export default class Game {
       isPaused: false,
       lastSkullCreateTime: 0,
       lastTickTime: 0,
+      life: 10,
       pauseTimestamp: 0,
       score: 0,
       skullFallSpeed: 10
@@ -224,14 +227,13 @@ export default class Game {
         // Remove if out of bounds
         if (skull.yPos >= this.canvas.height + skull.size) {
           delete this.skulls[skull.id];
+          this.state.life -= 1;
         }
       }
     });
   }
 
   startGame() {
-    // Clear the canvas
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     // Draw components and skulls
     this.components.fire.draw(
       this.ctx,
@@ -242,18 +244,40 @@ export default class Game {
     Object.values(this.skulls).forEach(skull => {
       skull.draw(this.ctx);
     });
+    if (this.state.life === 0) {
+      this.gameOver();
+    }
     this.components.header.draw(this.ctx, this.canvas.width);
     this.components.scoreDisplay.draw(this.ctx, this.state.score);
     this.components.speedSlider.draw(this.ctx);
     this.components.controlButton.draw(this.ctx, this.state.isPaused);
+    this.components.lifeGauge.draw(this.ctx, this.state.life);
+  }
+
+  gameOver() {
+    this.ctx.textAlign = 'center';
+    this.ctx.font = `${this.config.isSmallScreen ? '40px' : '80px'} Creepster`;
+    this.ctx.fillStyle = '#bb0a1e';
+    this.ctx.fillText(
+      'GAME OVER',
+      this.canvas.width / 2,
+      this.config.isSmallScreen ? 200 : 300
+    );
+    setTimeout(() => {
+      this.state.currentScreen = 'title';
+    }, 5000);
   }
 
   update() {
-    this.updateSkulls();
-    this.addSkulls();
+    if (this.state.life > 0) {
+      this.updateSkulls();
+      this.addSkulls();
+    }
   }
 
   render() {
+    // Clear the canvas
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     switch (this.state.currentScreen) {
       case 'game': {
         this.startGame();

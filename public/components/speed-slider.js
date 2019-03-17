@@ -5,20 +5,20 @@
 import config from '../config.js';
 
 export default class SpeedSlider {
-  constructor() {
+  constructor(canvasWidth) {
     this.label = {
-      xPos: 20,
+      xPos: canvasWidth - 175,
       yPos: 50,
       height: 14
     };
     this.dot = {
-      xPos: 80,
+      xPos: canvasWidth - 120,
       yPos: 45,
       size: 5
     };
     this.line = {
-      xPosStart: 80,
-      xPosEnd: 180,
+      xPosStart: canvasWidth - 120,
+      xPosEnd: canvasWidth - 20,
       yPos: 45
     };
     this.fillStyle = config.textColor;
