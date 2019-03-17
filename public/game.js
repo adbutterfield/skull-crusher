@@ -291,14 +291,14 @@ export default class Game {
       this.canvas.width / 2,
       this.config.isSmallScreen ? 200 : 300
     );
+    // Stop the fire sfx
+    this.components.fire.sfx.pause();
     if (this.state.lastTickTime - this.state.gameOverTime >= 5000) {
       // Reset skulls, life and score
       this.state.skullFallSpeed = 10;
       this.skulls = {};
       this.state.life = 10;
       this.state.score = 0;
-      // Stop the fire sfx
-      this.components.fire.sfx.pause();
       // Reset the speed slider
       this.components.speedSlider.reset();
       // Go back to title screen
