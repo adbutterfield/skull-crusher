@@ -3,6 +3,8 @@
  * @description Fire effect borrowed from: https://www.ssaurel.com/fireeffect/fireeffect.htm
  */
 
+import FireSfx from '../sounds/fire-1.wav';
+
 export default class Fire {
   constructor(ctx, canvasWidth, canvasHeight) {
     this.fps = 30;
@@ -10,7 +12,8 @@ export default class Fire {
     this.imageData = ctx.getImageData(0, 0, canvasWidth, canvasHeight);
     this.data = this.imageData.data;
     this.fire = [];
-    this.sfx = new Audio('../sounds/fire-1.wav');
+    this.sfx = new Audio();
+    this.sfx.src = FireSfx;
     // init fire array
     for (let i = 0; i < canvasWidth * canvasHeight; i++) {
       this.fire[i] = 0;

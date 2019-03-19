@@ -3,6 +3,7 @@
  */
 
 import config from '../config.js';
+import SpiderwebIcon from '../images/spider-web.svg';
 
 export default class TitleScreen {
   constructor(canvasWidth) {
@@ -29,7 +30,7 @@ export default class TitleScreen {
     let img = new Image();
     img.height = isSmallScreen ? 120 : 200;
     img.width = isSmallScreen ? 120 : 200;
-    img.src = '/assets/spider-web.svg';
+    img.src = SpiderwebIcon;
     ctx.drawImage(
       img,
       isSmallScreen ? -50 : -80,

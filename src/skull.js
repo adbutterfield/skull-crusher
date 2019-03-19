@@ -1,6 +1,9 @@
 /**
  * Class representing a skull
  */
+import SkullIcon from './images/skull.svg';
+import CrunchSfx from './sounds/crunch02.mp3';
+import BurnSfx from './sounds/burn.wav';
 
 function getRandomInt(maxValue) {
   return Math.ceil(Math.random() * Math.floor(maxValue));
@@ -37,17 +40,19 @@ class Skull {
     this.lastTickTime = lastTickTime;
     this.offset = 0;
     this.sfx = {
-      crunch: new Audio('./sounds/crunch02.mp3'),
-      burn: new Audio('./sounds/burn.wav')
+      crunch: new Audio(),
+      burn: new Audio()
     };
+    this.sfx.crunch.src = CrunchSfx;
     this.sfx.crunch.volume = 0.2;
+    this.sfx.burn.src = BurnSfx;
   }
 
   draw(ctx) {
     let img = new Image();
     img.height = this.size;
     img.width = this.size;
-    img.src = '../assets/skull.svg';
+    img.src = SkullIcon;
     ctx.drawImage(img, this.xPos, this.yPos, this.size, this.size);
   }
 

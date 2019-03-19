@@ -3,6 +3,8 @@
  */
 
 import config from '../config.js';
+import PlayIcon from '../images/play.svg';
+import PauseIcon from '../images/pause.svg';
 
 export default class ControlButton {
   constructor(canvasWidth) {
@@ -28,7 +30,7 @@ export default class ControlButton {
     let img = new Image();
     img.height = this.size;
     img.width = this.size;
-    img.src = `/assets/${isPaused ? 'play' : 'pause'}.svg`;
+    img.src = isPaused ? PlayIcon : PauseIcon;
     ctx.drawImage(
       img,
       this.image.xPos,
