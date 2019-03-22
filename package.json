@@ -16,7 +16,8 @@
     "start": "node server.js",
     "start:dev": "webpack-dev-server --open --config webpack.dev.js",
     "build": "webpack --config webpack.prod.js",
-    "postinstall": "build"
+    "version": "npm run build && git add -A dist",
+    "postversion": "git push && git push --tags"
   },
   "dependencies": {
     "express": "^4.16.3"
