@@ -3,8 +3,8 @@
  */
 
 import config from '../config.js';
-import PlayIcon from '../images/play.svg';
-import PauseIcon from '../images/pause.svg';
+import PlayIcon from '../../images/play.svg';
+import PauseIcon from '../../images/pause.svg';
 
 export default class ControlButton {
   constructor(canvasWidth) {

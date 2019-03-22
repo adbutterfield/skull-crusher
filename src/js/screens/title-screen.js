@@ -3,7 +3,7 @@
  */
 
 import config from '../config.js';
-import SpiderWebIcon from '../images/spider-web.svg';
+import SpiderWebIcon from '../../images/spider-web.svg';
 
 export default class TitleScreen {
   constructor(canvasWidth, isSmallScreen) {

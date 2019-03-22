@@ -1,9 +1,9 @@
 /**
  * Class representing a skull
  */
-import SkullIcon from './images/skull.svg';
-import CrunchSfx from './sounds/crunch02.mp3';
-import BurnSfx from './sounds/burn.wav';
+import SkullIcon from '../images/skull.svg';
+import CrunchSfx from '../sounds/crunch02.mp3';
+import BurnSfx from '../sounds/burn.wav';
 
 function getRandomInt(maxValue) {
   return Math.ceil(Math.random() * Math.floor(maxValue));

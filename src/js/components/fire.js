@@ -3,7 +3,7 @@
  * @description Fire effect borrowed from: https://www.ssaurel.com/fireeffect/fireeffect.htm
  */
 
-import FireSfx from '../sounds/fire-1.wav';
+import FireSfx from '../../sounds/fire-1.wav';
 const FIRE_HEIGHT = 57;
 
 export default class Fire {
