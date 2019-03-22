@@ -18,6 +18,14 @@ export default class ControlButton {
       yPos: 14,
       size: 18
     };
+    this.playImg = new Image();
+    this.playImg.height = this.image.size;
+    this.playImg.width = this.image.size;
+    this.playImg.src = PlayIcon;
+    this.pauseImg = new Image();
+    this.pauseImg.height = this.image.size;
+    this.pauseImg.width = this.image.size;
+    this.pauseImg.src = PauseIcon;
   }
 
   draw(ctx, isPaused) {
@@ -27,12 +35,8 @@ export default class ControlButton {
     ctx.font = `20px ${config.font}`;
     ctx.fillStyle = config.textColor;
     ctx.fillText(displayText, this.text.xPos, this.text.yPos);
-    let img = new Image();
-    img.height = this.size;
-    img.width = this.size;
-    img.src = isPaused ? PlayIcon : PauseIcon;
     ctx.drawImage(
-      img,
+      isPaused ? this.playImg : this.pauseImg,
       this.image.xPos,
       this.image.yPos,
       this.image.size,

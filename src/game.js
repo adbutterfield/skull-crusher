@@ -70,7 +70,7 @@ export default class Game {
 
     // game screens
     this.screens = {
-      titleScreen: new TitleScreen(this.canvas.width)
+      titleScreen: new TitleScreen(this.canvas.width, this.config.isSmallScreen)
     };
 
     // the skulls

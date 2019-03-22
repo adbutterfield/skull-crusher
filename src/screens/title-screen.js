@@ -3,11 +3,15 @@
  */
 
 import config from '../config.js';
-import SpiderwebIcon from '../images/spider-web.svg';
+import SpiderWebIcon from '../images/spider-web.svg';
 
 export default class TitleScreen {
-  constructor(canvasWidth) {
+  constructor(canvasWidth, isSmallScreen) {
     this.centerX = canvasWidth / 2;
+    this.spiderWebImg = new Image();
+    this.spiderWebImg.height = isSmallScreen ? 120 : 200;
+    this.spiderWebImg.width = isSmallScreen ? 120 : 200;
+    this.spiderWebImg.src = SpiderWebIcon;
   }
 
   load(ctx, isSmallScreen) {
@@ -27,12 +31,8 @@ export default class TitleScreen {
       `${isSmallScreen ? 260 : 440}`
     );
 
-    let img = new Image();
-    img.height = isSmallScreen ? 120 : 200;
-    img.width = isSmallScreen ? 120 : 200;
-    img.src = SpiderwebIcon;
     ctx.drawImage(
-      img,
+      this.spiderWebImg,
       isSmallScreen ? -50 : -80,
       isSmallScreen ? -42 : -72,
       isSmallScreen ? 120 : 200,

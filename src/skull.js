@@ -39,6 +39,8 @@ class Skull {
     this.yPos = headerHeight - this.size;
     this.lastTickTime = lastTickTime;
     this.offset = 0;
+    this.skullImg = new Image();
+    this.skullImg.src = SkullIcon;
     this.sfx = {
       crunch: new Audio(),
       burn: new Audio()
@@ -49,11 +51,7 @@ class Skull {
   }
 
   draw(ctx) {
-    let img = new Image();
-    img.height = this.size;
-    img.width = this.size;
-    img.src = SkullIcon;
-    ctx.drawImage(img, this.xPos, this.yPos, this.size, this.size);
+    ctx.drawImage(this.skullImg, this.xPos, this.yPos, this.size, this.size);
   }
 
   move(fallSpeed, thisTickTime, isPaused, pausedTimestamp) {
