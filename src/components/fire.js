@@ -4,24 +4,23 @@
  */
 
 import FireSfx from '../sounds/fire-1.wav';
+const FIRE_HEIGHT = 57;
 
 export default class Fire {
   constructor(ctx, canvasWidth, canvasHeight) {
-    this.fps = 30;
     this.threshold = 0.5;
-    this.imageData = ctx.getImageData(0, 0, canvasWidth, canvasHeight);
+    this.imageData = ctx.createImageData(canvasWidth, FIRE_HEIGHT);
     this.data = this.imageData.data;
     this.fire = [];
+    this.fire.length = canvasWidth * FIRE_HEIGHT;
+    this.fire.fill(0);
     this.sfx = new Audio();
     this.sfx.src = FireSfx;
-    // init fire array
-    for (let i = 0; i < canvasWidth * canvasHeight; i++) {
-      this.fire[i] = 0;
-    }
     this.colors = [];
+    this.colors.length = 256;
     for (let i = 0; i < 256; i++) {
       let color = [];
-      color[0] = color[1] = color[2] = 0;
+      color[0] = color[1] = color[2] = color[3] = 0;
       this.colors[i] = color;
     }
 
@@ -51,7 +50,7 @@ export default class Fire {
 
   draw(ctx, canvasWidth, canvasHeight, isPaused) {
     if (!isPaused) {
-      let bottomLine = canvasWidth * (canvasHeight - 1);
+      let bottomLine = canvasWidth * (FIRE_HEIGHT - 1);
       // draw random pixels at the bottom line
       for (let x = 0; x < canvasWidth; x++) {
         let value = 0;
@@ -64,14 +63,14 @@ export default class Fire {
       // move flip upwards, start at bottom
       let value = 0;
 
-      for (let y = 0; y < canvasHeight; ++y) {
+      for (let y = 0; y < FIRE_HEIGHT; ++y) {
         for (let x = 0; x < canvasWidth; ++x) {
-          if (x == 0) {
+          if (x === 0) {
             value = this.fire[bottomLine];
             value += this.fire[bottomLine];
             value += this.fire[bottomLine - canvasWidth];
             value /= 3;
-          } else if (x == canvasWidth - 1) {
+          } else if (x === canvasWidth - 1) {
             value = this.fire[bottomLine + x];
             value += this.fire[bottomLine - canvasWidth + x];
             value += this.fire[bottomLine + x - 1];
@@ -94,21 +93,19 @@ export default class Fire {
         bottomLine -= canvasWidth;
       }
     }
-    let skipRows = 2; // skip the bottom 2 rows
 
+    let skipRows = 2; // skip the bottom 2 rows
     // render the flames using our color table
-    for (let y = skipRows; y < canvasHeight; ++y) {
+    for (let y = skipRows; y < FIRE_HEIGHT; ++y) {
       for (let x = 0; x < canvasWidth; ++x) {
         let index = y * canvasWidth * 4 + x * 4;
         let value = this.fire[(y - skipRows) * canvasWidth + x];
-
         this.data[index] = this.colors[value][0];
         this.data[++index] = this.colors[value][1];
         this.data[++index] = this.colors[value][2];
         this.data[++index] = 255;
       }
     }
-
-    ctx.putImageData(this.imageData, 0, 0);
+    ctx.putImageData(this.imageData, 0, canvasHeight - FIRE_HEIGHT);
   }
 }
