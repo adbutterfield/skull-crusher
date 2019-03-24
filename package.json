@@ -26,11 +26,6 @@
   "engines": {
     "node": "10.15.3"
   },
-  "keywords": [
-    "node",
-    "express",
-    "sass"
-  ],
   "devDependencies": {
     "@babel/core": "^7.3.4",
     "@babel/preset-env": "^7.3.4",
