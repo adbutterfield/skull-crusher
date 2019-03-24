@@ -62,7 +62,11 @@ export default class Game {
 
     // game screens
     this.screens = {
-      titleScreen: new TitleScreen(this.canvas.width, this.config.isSmallScreen)
+      titleScreen: new TitleScreen(
+        this.canvas.width,
+        this.canvas.height,
+        this.config.isSmallScreen
+      )
     };
 
     // the skulls
@@ -161,13 +165,9 @@ export default class Game {
 
   addEventListeners() {
     if (this.state.currentScreen === 'title') {
-      document.onkeydown = evt => {
-        if (evt.keyCode === 13) {
-          // Reset the fire sfx
-          this.components.fire.sfx.volume = 1;
-          this.state.currentScreen = 'game';
-        }
-      };
+      this.canvas.addEventListener('click', evt => {
+        this.state.currentScreen = 'game';
+      });
       this.canvas.addEventListener('touchstart', evt => {
         this.state.currentScreen = 'game';
       });
@@ -288,12 +288,13 @@ export default class Game {
 
   gameOver() {
     this.ctx.textAlign = 'center';
-    this.ctx.font = `${this.config.isSmallScreen ? '40px' : '80px'} Creepster`;
+    const fontHeight = this.config.isSmallScreen ? 40 : 80;
+    this.ctx.font = `${fontHeight}px ${config.titleFont}`;
     this.ctx.fillStyle = '#bb0a1e';
     this.ctx.fillText(
       'GAME OVER',
       this.canvas.width / 2,
-      this.config.isSmallScreen ? 200 : 300
+      this.canvas.height / 2 - fontHeight
     );
     if (this.state.lastTickTime - this.state.gameOverTime >= 5000) {
       // Reset game state
