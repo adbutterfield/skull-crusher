@@ -4,7 +4,7 @@
  */
 
 import FireSfx from '../../sounds/fire-1.wav';
-const FIRE_HEIGHT = 57;
+const FIRE_HEIGHT = 60;
 
 export default class Fire {
   constructor(ctx, canvasWidth, canvasHeight) {
