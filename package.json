@@ -16,7 +16,7 @@
     "start": "node server.js",
     "start:dev": "webpack-dev-server --open --config webpack.dev.js",
     "build": "webpack --config webpack.prod.js",
-    "preversion": "git add . && git commit",
+    "preversion": "rm -rf dist && git add dist && git commit 'Clean dist before build",
     "version": "npm run build && git add -A dist",
     "postversion": "git push && git push --tags"
   },
