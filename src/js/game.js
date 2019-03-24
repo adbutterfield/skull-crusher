@@ -32,14 +32,6 @@ function getClickPoint(evt) {
   return clickPoint;
 }
 
-function skullWasClicked(clickPoint, skull) {
-  return (
-    (clickPoint.xPos - (skull.xPos + skull.size / 2)) ** 2 +
-      (clickPoint.yPos - (skull.yPos + skull.size / 2)) ** 2 <
-    (skull.size / 2) ** 2
-  );
-}
-
 export default class Game {
   constructor() {
     // configuration settings
@@ -124,7 +116,7 @@ export default class Game {
         clickPoint.yPos > this.config.headerHeight
       ) {
         Object.values(this.skulls).forEach(skull => {
-          if (skullWasClicked(clickPoint, skull)) {
+          if (skull.wasClicked(clickPoint)) {
             this.state.score += skull.pointValue;
             skull.sfx.crunch.play();
             this.displayScores[skull.id] = {

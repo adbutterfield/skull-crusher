@@ -66,6 +66,14 @@ class Skull {
       this.offset = 0;
     }
   }
+
+  wasClicked(clickPoint) {
+    return (
+      (clickPoint.xPos - (this.xPos + this.size / 2)) ** 2 +
+        (clickPoint.yPos - (this.yPos + this.size / 2)) ** 2 <
+      (this.size / 2) ** 2
+    );
+  }
 }
 
 export default Skull;
