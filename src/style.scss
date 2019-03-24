@@ -38,6 +38,12 @@ body {
   }
 }
 
+.font {
+  visibility: hidden;
+  height: 0;
+  font-size: 0;
+}
+
 .font1 {
   font-family: 'Source Code Pro';
 }
