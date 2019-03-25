@@ -10,11 +10,11 @@ export default class ControlButton {
   constructor(canvasWidth) {
     this.text = {
       width: 0,
-      xPos: canvasWidth - 115,
+      xPos: canvasWidth - 50,
       yPos: 30
     };
     this.image = {
-      xPos: canvasWidth - 105,
+      xPos: canvasWidth - 40,
       yPos: 14,
       size: 18
     };

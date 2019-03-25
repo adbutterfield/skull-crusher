@@ -16,7 +16,7 @@ export default class Header {
     ctx.fillStyle = config.backgroundColor;
     ctx.fillRect(this.xPos, this.yPos, this.width, this.height);
 
-    ctx.fillStyle = config.textColor;
+    ctx.strokeStyle = config.textColor;
     ctx.moveTo(this.xPos, this.height);
     ctx.lineTo(this.width, this.height);
     ctx.stroke();
