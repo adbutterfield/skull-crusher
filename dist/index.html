@@ -1,15 +1,44 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Skull Crusher</title>
-  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1" />
-  <meta name"desctiption" content="Skull Crusher!!!">
-  <link href="https://fonts.googleapis.com/css?family=Creepster|Source+Code+Pro" rel="stylesheet">
-<link rel="shortcut icon" href="favicon.ico"><link href="main.css?5bdb4264751f3a07937c" rel="stylesheet"></head>
-<body>
-  <canvas id="game" class="canvas"></canvas>
-  <!-- placeholder text to preload fonts -->
-  <div class="font font1">Skull Crusher!!!</div>
-  <div class="font font2">Skull Crusher!!!</div>
-<script type="text/javascript" src="runtime.bundle.js?8239d738776a565bbe6b]"></script><script type="text/javascript" src="main.bundle.js?4ee6f084c75632d67044"></script></body>
+  <head>
+    <title>Skull Crusher</title>
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1"
+    />
+    <meta name="description" content="Skull Crusher!!!" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Creepster|Source+Code+Pro"
+      rel="stylesheet"
+    />
+  <link rel="shortcut icon" href="favicon.ico"><link href="main.css?82b507e6db2e7e93cf2e" rel="stylesheet"></head>
+  <body>
+    <div id="game-header" class="header header--hidden">
+      <div id="game-score" class="score" data-score="0">SCORE:</div>
+      <div id="game-controls" class="play-control"></div>
+      <div class="life">
+        LIFE:
+        <span class="life__background"></span>
+        <span id="game-life" class="life__overlay"></span>
+      </div>
+      <div class="speed-control">
+        <span>SPEED:</span>
+        <input
+          type="range"
+          min="10"
+          max="100"
+          value="10"
+          class="speed-control__slider"
+          id="game-speed-control-slider"
+        />
+      </div>
+    </div>
+    <canvas id="game" class="canvas"></canvas>
+    <div id="game-canvas-overlay" class="canvas__overlay">
+      <p class="canvas__overlay-text">PAUSED</p>
+    </div>
+    <!-- placeholder text to preload fonts -->
+    <div class="font-placeholder font1">Skull Crusher!!!</div>
+    <div class="font-placeholder font2">Skull Crusher!!!</div>
+  <script type="text/javascript" src="runtime.bundle.js?3b00a397caf7f3174c99]"></script><script type="text/javascript" src="main.bundle.js?30fed093776dc6ca9beb"></script></body>
 </html>
