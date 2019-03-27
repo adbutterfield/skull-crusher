@@ -1,7 +1,7 @@
 .canvas {
   background-color: $main-background-color;
   display: block;
-  height: 100vh;
+  height: 100%;
   position: fixed;
   top: 0;
   @media (max-width: 800px) {
