@@ -35,5 +35,7 @@
   }
   &::-moz-range-thumb {
     @include slider-dot;
+    background-color: transparent;
+    border: none;
   }
 }
