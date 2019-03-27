@@ -4,7 +4,7 @@
   display: flex;
   flex-wrap: wrap;
   height: 60px;
-  padding: 14px 20px 8px;
+  padding: 10px 20px;
   position: fixed;
   z-index: 10;
   @media (max-width: 800px) {
@@ -14,8 +14,9 @@
     width: 800px;
     margin: 0 auto;
   }
+  // On smaller screens, the life and speed will overlap
   @media (max-width: 339px) {
-    padding: 14px 10px 8px;
+    padding: 10px;
   }
 }
 
