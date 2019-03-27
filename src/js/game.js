@@ -194,7 +194,7 @@ export default class Game {
       this.gameClickEvents(getClickPoint(evt));
     });
 
-    this.canvas.addEventListener('touch', evt => {
+    this.canvas.addEventListener('touchstart', evt => {
       this.titleScreenClickEvents();
       this.gameClickEvents(getClickPoint(evt));
     });
