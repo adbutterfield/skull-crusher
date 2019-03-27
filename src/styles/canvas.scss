@@ -1,0 +1,38 @@
+.canvas {
+  background-color: $main-background-color;
+  display: block;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  @media (max-width: 800px) {
+    width: 100vw;
+  }
+  @media (min-width: 801px) {
+    width: 800px;
+    margin: 0 auto;
+  }
+}
+
+.canvas__overlay {
+  align-items: center;
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+  @media (max-width: 800px) {
+    width: 100vw;
+  }
+  @media (min-width: 801px) {
+    width: 800px;
+  }
+}
+
+.canvas__overlay--active {
+  background-color: $white;
+  opacity: 0.1;
+}
+
+.canvas__overlay-text {
+  color: $main-background-color;
+  font-family: $title-font;
+  font-size: 80px;
+}

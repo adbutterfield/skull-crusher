@@ -1,0 +1,26 @@
+.header {
+  background-color: $main-background-color;
+  border-bottom: 1px solid $text-color;
+  display: flex;
+  flex-wrap: wrap;
+  height: 60px;
+  padding: 14px 20px 8px;
+  position: fixed;
+  z-index: 10;
+  @media (max-width: 800px) {
+    width: 100vw;
+  }
+  @media (min-width: 801px) {
+    width: 800px;
+    margin: 0 auto;
+  }
+  @media (max-width: 339px) {
+    padding: 14px 10px 8px;
+  }
+}
+
+.header--hidden {
+  display: none;
+  height: 0;
+  pointer-events: none;
+}

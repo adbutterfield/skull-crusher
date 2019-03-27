@@ -1,0 +1,13 @@
+.score {
+  color: $text-color;
+  flex: 1 0 50%;
+  font-family: $text-font;
+  font-size: 20px;
+  height: 20px;
+  line-height: 1;
+  &:after {
+    color: $green;
+    content: attr(data-score);
+    margin-left: 4px;
+  }
+}

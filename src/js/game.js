@@ -4,13 +4,29 @@
 
 import Skull from './skull.js';
 import TitleScreen from './screens/title-screen.js';
-import Header from './components/header.js';
-import ControlButton from './components/control-button.js';
-import ScoreDisplay from './components/score-display.js';
-import SpeedSlider from './components/speed-slider.js';
 import Fire from './components/fire.js';
-import LifeGauge from './components/life-gauge.js';
 import config from './config.js';
+
+function toggleCanvasOverlay() {
+  const canvasOverlayEl = document.getElementById('game-canvas-overlay');
+  canvasOverlayEl.classList.toggle('canvas__overlay--active');
+}
+
+function toggleHeader() {
+  const headerEl = document.getElementById('game-header');
+  headerEl.classList.toggle('header--hidden');
+}
+
+function updateScore(pointValue) {
+  const scoreEl = document.getElementById('game-score');
+  scoreEl.dataset.score =
+    pointValue !== 0 ? Number(scoreEl.dataset.score) + pointValue : 0;
+}
+
+function updateLife(lifePoints) {
+  const lifeEl = document.getElementById('game-life');
+  lifeEl.style['min-width'] = `${lifePoints}0px`;
+}
 
 function getClickPoint(evt) {
   let clickPoint = {};
@@ -49,12 +65,7 @@ export default class Game {
 
     // display components
     this.components = {
-      controlButton: new ControlButton(this.canvas.width),
-      header: new Header(this.canvas.width, this.config.headerHeight),
-      fire: new Fire(this.ctx, this.canvas.width, this.canvas.height),
-      scoreDisplay: new ScoreDisplay(),
-      speedSlider: new SpeedSlider(this.canvas.width),
-      lifeGauge: new LifeGauge(this.ctx)
+      fire: new Fire(this.ctx, this.canvas.width, this.canvas.height)
     };
 
     // skull score to display after destroying
@@ -74,15 +85,16 @@ export default class Game {
 
     // game state
     this.state = {
-      clickPoint: {},
       currentScreen: 'title',
+      isGameTabHidden: false,
       isPaused: false,
       lastSkullCreateTime: 0,
       lastTickTime: 0,
       life: 10,
       pauseTimestamp: 0,
       score: 0,
-      skullFallSpeed: 10
+      skullFallSpeed: 10,
+      speedSliderIsSliding: false
     };
 
     // initialize event listeners
@@ -92,22 +104,6 @@ export default class Game {
   // Events
   gameClickEvents(clickPoint) {
     if (this.state.currentScreen === 'game') {
-      // Click event for the pause/resume button
-      if (
-        this.state.life > 0 &&
-        this.components.controlButton.wasClicked(clickPoint)
-      ) {
-        this.state.isPaused = !this.state.isPaused;
-        this.state.pauseTimestamp = this.state.isPaused
-          ? this.state.lastTickTime
-          : 0;
-      }
-      // Click event for the speed adjustment slider
-      if (this.components.speedSlider.barWasClicked(clickPoint)) {
-        this.components.speedSlider.moveToPointOnBar(clickPoint.xPos);
-        this.state.skullFallSpeed = this.components.speedSlider.getSkullFallSpeed();
-      }
-
       // Click event for skulls
       // Don't run check if game is over.
       // Don't run check if paused.
@@ -121,7 +117,7 @@ export default class Game {
       ) {
         Object.values(this.skulls).forEach(skull => {
           if (skull.wasClicked(clickPoint)) {
-            this.state.score += skull.pointValue;
+            updateScore(skull.pointValue);
             skull.sfx.crunch.play();
             this.displayScores[skull.id] = {
               id: skull.id,
@@ -137,115 +133,115 @@ export default class Game {
     }
   }
 
-  gameMouseDownEvents(clickPoint) {
-    if (this.state.currentScreen === 'game') {
-      if (this.components.speedSlider.wasClicked(clickPoint)) {
-        this.components.speedSlider.isSliding = true;
-      }
-    }
-  }
-
-  gameMouseMoveEvents(evt) {
-    if (this.state.currentScreen === 'game') {
-      if (this.components.speedSlider.isSliding) {
-        this.state.clickPoint = getClickPoint(evt);
-        this.components.speedSlider.updateSlider(this.state.clickPoint.xPos);
-        this.state.skullFallSpeed = this.components.speedSlider.getSkullFallSpeed();
-      }
-    }
-  }
-
-  gameMouseUpEvents(evt) {
-    if (this.state.currentScreen === 'game') {
-      if (this.components.speedSlider.isSliding) {
-        this.components.speedSlider.isSliding = false;
-      }
+  titleScreenClickEvents() {
+    if (this.state.currentScreen === 'title') {
+      this.state.currentScreen = 'game';
+      this.components.fire.sfx.volume = 1;
+      this.components.fire.sfx.play();
+      toggleHeader();
     }
   }
 
   addEventListeners() {
-    if (this.state.currentScreen === 'title') {
-      this.canvas.addEventListener('click', evt => {
-        this.state.currentScreen = 'game';
-      });
-      this.canvas.addEventListener('touchstart', evt => {
-        this.state.currentScreen = 'game';
-      });
-    }
+    // Event for when tab loses focus
+    document.addEventListener('visibilitychange', () => {
+      this.state.isGameTabHidden = document.hidden;
+      if (
+        this.state.currentScreen === 'game' &&
+        this.state.life > 0 &&
+        !this.state.isPaused
+      ) {
+        this.state.isPaused = true;
+        this.state.pauseTimestamp = this.state.lastTickTime;
+        this.components.fire.sfx.pause();
+        const gameControlsEl = document.getElementById('game-controls');
+        gameControlsEl.classList.toggle('play-control--paused');
+        toggleCanvasOverlay();
+      }
+      if (this.state.life === 0) {
+        this.state.isGameTabHidden
+          ? this.components.fire.sfx.pause()
+          : this.components.fire.sfx.play();
+      }
+    });
+
+    // Click event for the speed slider control
+    const speedSliderBarEl = document.getElementById(
+      'game-speed-control-slider'
+    );
+    speedSliderBarEl.addEventListener('input', evt => {
+      this.state.skullFallSpeed = speedSliderBarEl.value;
+    });
+
+    // Click event for the pause/resume button
+    const gameControlsEl = document.getElementById('game-controls');
+    gameControlsEl.addEventListener('click', () => {
+      if (this.state.life > 0) {
+        gameControlsEl.classList.toggle('play-control--paused');
+        this.state.isPaused = !this.state.isPaused;
+        toggleCanvasOverlay();
+        if (this.state.isPaused) {
+          this.state.pauseTimestamp = this.state.lastTickTime;
+          this.components.fire.sfx.pause();
+        } else {
+          this.components.fire.sfx.play();
+        }
+      }
+    });
+
     this.canvas.addEventListener('click', evt => {
-      this.gameClickEvents(this.state.clickPoint);
+      this.titleScreenClickEvents();
+      this.gameClickEvents(getClickPoint(evt));
     });
-    this.canvas.addEventListener('mousedown', evt => {
-      this.state.clickPoint = getClickPoint(evt);
-      this.gameMouseDownEvents(this.state.clickPoint);
-    });
+
     this.canvas.addEventListener('touchstart', evt => {
-      this.state.clickPoint = getClickPoint(evt);
-      this.gameClickEvents(this.state.clickPoint);
-      this.gameMouseDownEvents(this.state.clickPoint);
-    });
-    this.canvas.addEventListener('mousemove', evt => {
-      this.gameMouseMoveEvents(evt);
-    });
-    this.canvas.addEventListener('touchmove', evt => {
-      this.gameMouseMoveEvents(evt);
-    });
-    this.canvas.addEventListener('mouseup', evt => {
-      this.gameMouseUpEvents(evt);
-    });
-    this.canvas.addEventListener('touchend', evt => {
-      this.gameMouseUpEvents(evt);
+      this.titleScreenClickEvents();
+      this.gameClickEvents(getClickPoint(evt));
     });
   }
 
   createSkull() {
-    return new Skull(
+    const newSkull = new Skull(
       this.canvas.width,
       this.config.headerHeight,
       this.state.lastTickTime
     );
+    this.skulls[newSkull.id] = newSkull;
   }
 
   addSkulls() {
-    if (
-      this.state.currentScreen === 'game' &&
-      this.state.life > 0 &&
-      !this.state.isPaused
-    ) {
-      if (this.state.lastTickTime - this.state.lastSkullCreateTime >= 1000) {
-        const skulls = Object.values(this.skulls);
-        if (skulls.length === 0) {
-          const newSkull = this.createSkull();
-          this.skulls[newSkull.id] = newSkull;
-        }
+    // Add a new skull every second
+    if (this.state.lastTickTime - this.state.lastSkullCreateTime >= 1000) {
+      const skulls = Object.values(this.skulls);
+      if (skulls.length === 0) {
+        this.createSkull();
+      } else {
         const lastSkull = skulls[skulls.length - 1];
-        // Don't add skulls on top of each other.
+        // Avoid adding skulls on top of each other.
         if (lastSkull && lastSkull.yPos >= lastSkull.size) {
-          const newSkull = this.createSkull();
-          this.skulls[newSkull.id] = newSkull;
+          this.createSkull();
         }
-        this.state.lastSkullCreateTime = this.state.lastTickTime;
       }
+      this.state.lastSkullCreateTime = this.state.lastTickTime;
     }
   }
 
   updateSkulls() {
     Object.values(this.skulls).forEach(skull => {
-      if (this.state.currentScreen === 'game') {
-        skull.move(
-          this.state.skullFallSpeed,
-          this.state.lastTickTime,
-          this.state.isPaused,
-          this.state.pauseTimestamp
-        );
-        // Remove if out of bounds
-        if (skull.yPos >= this.canvas.height + skull.size) {
-          skull.sfx.burn.play();
-          delete this.skulls[skull.id];
-          this.state.life -= 1;
-          if (!this.state.life) {
-            this.state.gameOverTime = this.state.lastTickTime;
-          }
+      skull.move(
+        this.state.skullFallSpeed,
+        this.state.lastTickTime,
+        this.state.isPaused,
+        this.state.pauseTimestamp
+      );
+      // Remove if out of bounds
+      if (skull.yPos >= this.canvas.height + skull.size) {
+        skull.sfx.burn.play();
+        delete this.skulls[skull.id];
+        this.state.life -= 1;
+        updateLife(this.state.life);
+        if (!this.state.life) {
+          this.state.gameOverTime = this.state.lastTickTime;
         }
       }
     });
@@ -264,7 +260,10 @@ export default class Game {
     });
   }
 
-  startGame() {
+  runGame() {
+    if (this.state.isPaused) {
+      this.components.fire.sfx.pause();
+    }
     // Draw components and skulls
     this.components.fire.draw(
       this.ctx,
@@ -279,16 +278,11 @@ export default class Game {
       this.gameOver();
     }
     this.drawScores();
-    this.components.header.draw(this.ctx, this.canvas.width);
-    this.components.scoreDisplay.draw(this.ctx, this.state.score);
-    this.components.speedSlider.draw(this.ctx);
-    this.components.controlButton.draw(this.ctx, this.state.isPaused);
-    this.components.lifeGauge.draw(this.ctx, this.state.life);
   }
 
   gameOver() {
     this.ctx.textAlign = 'center';
-    const fontHeight = this.config.isSmallScreen ? 40 : 80;
+    const fontHeight = this.config.isSmallScreen ? 50 : 80;
     this.ctx.font = `${fontHeight}px ${config.titleFont}`;
     this.ctx.fillStyle = '#bb0a1e';
     this.ctx.fillText(
@@ -296,26 +290,39 @@ export default class Game {
       this.canvas.width / 2,
       this.canvas.height / 2 - fontHeight
     );
+    if (this.state.isGameTabHidden) {
+      this.state.gameOverTime +=
+        this.state.lastTickTime - this.state.gameOverTime;
+    }
     if (this.state.lastTickTime - this.state.gameOverTime >= 5000) {
       // Reset game state
       this.state.skullFallSpeed = 10;
       this.skulls = {};
       this.state.life = 10;
+      updateLife(this.state.life);
       this.state.score = 0;
+      updateScore(0);
       this.state.isPaused = false;
       // Reset the speed slider
-      this.components.speedSlider.reset();
+      const speedSliderBarEl = document.getElementById(
+        'game-speed-control-slider'
+      );
+      speedSliderBarEl.value = 10;
       // Mute the fire sfx
       this.components.fire.sfx.volume = 0;
+      // Remove the header
+      toggleHeader();
       // Go back to title screen
       this.state.currentScreen = 'title';
     }
   }
 
   update() {
-    if (this.state.life > 0) {
+    if (this.state.currentScreen === 'game' && this.state.life > 0) {
       this.updateSkulls();
-      this.addSkulls();
+      if (!this.state.isPaused) {
+        this.addSkulls();
+      }
     }
   }
 
@@ -324,12 +331,7 @@ export default class Game {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     switch (this.state.currentScreen) {
       case 'game': {
-        this.startGame();
-        if (this.state.isPaused) {
-          this.components.fire.sfx.pause();
-        } else {
-          this.components.fire.sfx.play();
-        }
+        this.runGame();
         break;
       }
       default: {

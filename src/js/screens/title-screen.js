@@ -13,7 +13,7 @@ export default class TitleScreen {
     this.spiderWebImg.width = isSmallScreen ? 120 : 200;
     this.spiderWebImg.src = SpiderWebIcon;
     this.title = {
-      size: isSmallScreen ? 40 : 80
+      size: isSmallScreen ? 50 : 80
     };
     this.title.yPos = canvasHeight / 2 - this.title.size;
 

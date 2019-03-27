@@ -1,0 +1,23 @@
+html,
+body {
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+}
+
+html {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #333333;
+  display: flex;
+  justify-content: center;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}

@@ -16,6 +16,10 @@ export default class Fire {
     this.fire.fill(0);
     this.sfx = new Audio();
     this.sfx.src = FireSfx;
+    this.sfx.onended = () => {
+      // TODO
+      this.sfx.play();
+    };
     this.colors = [];
     this.colors.length = 256;
     for (let i = 0; i < 256; i++) {

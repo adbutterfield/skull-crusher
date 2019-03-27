@@ -1,0 +1,37 @@
+@mixin life-meter($color) {
+  background: repeating-linear-gradient(
+    to right,
+    $color,
+    $color 7px,
+    transparent 3px 10px
+  );
+  content: ' ';
+  display: inline-block;
+  height: 14px;
+  vertical-align: middle;
+  min-width: 97px;
+}
+
+.life {
+  align-items: center;
+  color: $text-color;
+  display: flex;
+  flex: 1 0 50%;
+  font-family: $text-font;
+  font-size: 14px;
+  height: 14px;
+  line-height: 1;
+  margin-top: 2px;
+  max-width: 50%;
+}
+
+.life__background {
+  @include life-meter($red);
+  margin-left: 4px;
+}
+
+.life__overlay {
+  @include life-meter($white);
+  transform: translate(-97px);
+  z-index: 10;
+}
