@@ -357,7 +357,8 @@ export default class Game {
   }
 
   run(dTime) {
-    this.state.lastTickTime = dTime;
+    // Floor the delta to avoid float based math, and make animation smoother
+    this.state.lastTickTime = Math.floor(dTime);
     window.requestAnimationFrame(dTime => this.run(dTime));
     this.update();
     this.render();
