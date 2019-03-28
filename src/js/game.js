@@ -93,8 +93,7 @@ export default class Game {
       life: 10,
       pauseTimestamp: 0,
       score: 0,
-      skullFallSpeed: 10,
-      speedSliderIsSliding: false
+      skullFallSpeed: 10
     };
 
     // initialize event listeners
@@ -136,13 +135,12 @@ export default class Game {
   titleScreenClickEvents() {
     if (this.state.currentScreen === 'title') {
       this.state.currentScreen = 'game';
-      this.components.fire.sfx.volume = 1;
-      this.components.fire.sfx.play();
       toggleHeader();
+      this.components.fire.sfx.volume = 1;
     }
   }
 
-  addEventListeners() {
+  visibilityChangeEvent() {
     // Event for when tab loses focus
     document.addEventListener('visibilitychange', () => {
       this.state.isGameTabHidden = document.hidden;
@@ -164,7 +162,9 @@ export default class Game {
           : this.components.fire.sfx.play();
       }
     });
+  }
 
+  speedSliderEvent() {
     // Click event for the speed slider control
     const speedSliderBarEl = document.getElementById(
       'game-speed-control-slider'
@@ -172,7 +172,9 @@ export default class Game {
     speedSliderBarEl.addEventListener('input', evt => {
       this.state.skullFallSpeed = speedSliderBarEl.value;
     });
+  }
 
+  playControlEvent() {
     // Click event for the pause/resume button
     const gameControlsEl = document.getElementById('game-controls');
     gameControlsEl.addEventListener('click', () => {
@@ -188,13 +190,19 @@ export default class Game {
         }
       }
     });
+  }
 
-    this.canvas.addEventListener('click', evt => {
+  addEventListeners() {
+    this.visibilityChangeEvent();
+    this.speedSliderEvent();
+    this.playControlEvent();
+
+    this.canvas.addEventListener('touchstart', evt => {
       this.titleScreenClickEvents();
       this.gameClickEvents(getClickPoint(evt));
     });
 
-    this.canvas.addEventListener('touchstart', evt => {
+    this.canvas.addEventListener('click', evt => {
       this.titleScreenClickEvents();
       this.gameClickEvents(getClickPoint(evt));
     });
@@ -263,7 +271,11 @@ export default class Game {
   runGame() {
     if (this.state.isPaused) {
       this.components.fire.sfx.pause();
+    } else if (!this.components.fire.sfx.played.length) {
+      // Start fire sfx if it has not yet
+      this.components.fire.sfx.play();
     }
+
     // Draw components and skulls
     this.components.fire.draw(
       this.ctx,
@@ -278,6 +290,21 @@ export default class Game {
       this.gameOver();
     }
     this.drawScores();
+  }
+
+  resetGameState() {
+    this.state.skullFallSpeed = 10;
+    this.skulls = {};
+    this.state.life = 10;
+    updateLife(this.state.life);
+    this.state.score = 0;
+    updateScore(0);
+    this.state.isPaused = false;
+    // Reset the speed slider
+    const speedSliderBarEl = document.getElementById(
+      'game-speed-control-slider'
+    );
+    speedSliderBarEl.value = 10;
   }
 
   gameOver() {
@@ -296,18 +323,7 @@ export default class Game {
     }
     if (this.state.lastTickTime - this.state.gameOverTime >= 5000) {
       // Reset game state
-      this.state.skullFallSpeed = 10;
-      this.skulls = {};
-      this.state.life = 10;
-      updateLife(this.state.life);
-      this.state.score = 0;
-      updateScore(0);
-      this.state.isPaused = false;
-      // Reset the speed slider
-      const speedSliderBarEl = document.getElementById(
-        'game-speed-control-slider'
-      );
-      speedSliderBarEl.value = 10;
+      this.resetGameState();
       // Mute the fire sfx
       this.components.fire.sfx.volume = 0;
       // Remove the header
