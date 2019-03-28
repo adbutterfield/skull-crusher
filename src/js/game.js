@@ -136,6 +136,8 @@ export default class Game {
               time: this.state.lastTickTime
             };
             delete this.skulls[skull.id];
+            // Increse speed when you destroy a skull
+            this.updateSpeed(this.state.skullFallSpeed + 1);
           }
         });
       }
@@ -181,7 +183,7 @@ export default class Game {
       'game-speed-control-slider'
     );
     speedSliderBarEl.addEventListener('input', evt => {
-      this.state.skullFallSpeed = speedSliderBarEl.value;
+      this.state.skullFallSpeed = Number(speedSliderBarEl.value);
     });
   }
 
@@ -266,6 +268,17 @@ export default class Game {
     });
   }
 
+  updateSpeed(newSpeed) {
+    if (newSpeed <= 100) {
+      // Click event for the speed slider control
+      const speedSliderBarEl = document.getElementById(
+        'game-speed-control-slider'
+      );
+      this.state.skullFallSpeed = newSpeed;
+      speedSliderBarEl.value = newSpeed;
+    }
+  }
+
   drawScores() {
     Object.values(this.displayScores).forEach(score => {
       if (this.state.lastTickTime - score.time <= 500) {
@@ -305,18 +318,13 @@ export default class Game {
   }
 
   resetGameState() {
-    this.state.skullFallSpeed = 10;
     this.skulls = {};
     this.state.life = 10;
     updateLife(this.state.life);
     this.state.score = 0;
     updateScore(0);
     this.state.isPaused = false;
-    // Reset the speed slider
-    const speedSliderBarEl = document.getElementById(
-      'game-speed-control-slider'
-    );
-    speedSliderBarEl.value = 10;
+    this.updateSpeed(10);
   }
 
   gameOver() {
