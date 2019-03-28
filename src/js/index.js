@@ -20,6 +20,8 @@ function preloadImages(cb) {
 const game = new Game();
 
 preloadImages(() => {
+  // Ensure a fresh game state
+  game.resetGameState();
   // Kick off main game loop
   const firstGameTime = window.performance.now();
   game.state.lastSkullCreateTime = firstGameTime;
