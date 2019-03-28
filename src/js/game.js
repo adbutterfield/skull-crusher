@@ -57,15 +57,25 @@ export default class Game {
     };
 
     // canvas element
-    this.canvas = document.getElementById('game');
+    this.canvas = document.getElementById('game-canvas');
     this.canvas.width = this.config.isSmallScreen ? window.innerWidth : 800;
     this.canvas.height = window.innerHeight;
     // canvas context
     this.ctx = this.canvas.getContext('2d');
+    // fire canvas element
+    this.fireCanvas = document.getElementById('fire-canvas');
+    this.fireCanvas.width = this.config.isSmallScreen ? window.innerWidth : 800;
+    this.fireCanvas.height = window.innerHeight;
+    // fireCanvas context
+    this.fireCtx = this.fireCanvas.getContext('2d');
 
     // display components
     this.components = {
-      fire: new Fire(this.ctx, this.canvas.width, this.canvas.height)
+      fire: new Fire(
+        this.fireCtx,
+        this.fireCanvas.width,
+        this.fireCanvas.height
+      )
     };
 
     // skull score to display after destroying
@@ -278,15 +288,16 @@ export default class Game {
     }
 
     // Draw components and skulls
-    this.components.fire.draw(
-      this.ctx,
-      this.canvas.width,
-      this.canvas.height,
-      this.state.isPaused
-    );
     Object.values(this.skulls).forEach(skull => {
       skull.draw(this.ctx);
     });
+
+    this.components.fire.draw(
+      this.fireCtx,
+      this.fireCanvas.width,
+      this.fireCanvas.height,
+      this.state.isPaused
+    );
     if (this.state.life === 0) {
       this.gameOver();
     }
@@ -331,6 +342,13 @@ export default class Game {
       toggleHeader();
       // Go back to title screen
       this.state.currentScreen = 'title';
+      // Clear the fire canvas
+      this.fireCtx.clearRect(
+        0,
+        0,
+        this.fireCanvas.width,
+        this.fireCanvas.height
+      );
     }
   }
 

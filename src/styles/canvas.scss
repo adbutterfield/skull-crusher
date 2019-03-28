@@ -13,6 +13,11 @@
   }
 }
 
+.canvas--fire {
+  background-color: transparent;
+  pointer-events: none;
+}
+
 .canvas__overlay {
   align-items: center;
   display: flex;

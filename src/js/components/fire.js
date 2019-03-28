@@ -95,7 +95,12 @@ export default class Fire {
             this.data[index] = this.colors[value][0];
             this.data[++index] = this.colors[value][1];
             this.data[++index] = this.colors[value][2];
-            this.data[++index] = 255;
+            this.data[++index] =
+              !this.colors[value][0] &&
+              !this.colors[value][1] &&
+              this.colors[value][2] <= 255
+                ? 0
+                : 200;
           }
         }
 
