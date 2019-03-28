@@ -136,6 +136,7 @@ export default class Game {
     if (this.state.currentScreen === 'title') {
       this.state.currentScreen = 'game';
       toggleHeader();
+      this.components.fire.sfx.play();
       this.components.fire.sfx.volume = 1;
     }
   }
