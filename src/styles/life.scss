@@ -12,21 +12,12 @@
 }
 
 .life {
-  align-items: center;
-  color: $text-color;
-  display: flex;
-  flex: 1 0 50%;
-  font-family: $text-font;
-  font-size: 14px;
-  height: 14px;
-  line-height: 1;
-  margin-top: 6px;
-  max-width: 50%;
+  @include headerText--small();
 }
 
 .life__background {
   @include life-meter($red);
-  margin-left: 4px;
+  @include labelMargin();
 }
 
 .life__overlay {

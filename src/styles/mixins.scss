@@ -1,0 +1,25 @@
+@mixin headerText--large {
+  color: $textColor;
+  flex: 1 0 50%;
+  font-family: $text-font;
+  font-size: 20px;
+  height: 20px;
+  line-height: 1;
+}
+
+@mixin headerText--small {
+  align-items: center;
+  color: $textColor;
+  display: flex;
+  flex: 1 0 50%;
+  font-family: $text-font;
+  font-size: 14px;
+  height: 14px;
+  line-height: 1;
+  margin-top: 6px;
+  max-width: 50%;
+}
+
+@mixin labelMargin {
+  margin-left: 4px;
+}

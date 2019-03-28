@@ -1,29 +1,20 @@
 @mixin slider-dot {
-  width: 20px;
-  height: 20px;
   background-image: url('../images/skull.svg');
   background-size: 20px 20px;
   cursor: pointer;
+  height: 20px;
+  width: 20px;
 }
 
 .speed-control {
-  align-items: center;
-  color: $text-color;
-  display: flex;
-  flex: 1 0 50%;
-  font-family: $text-font;
-  font-size: 14px;
-  height: 14px;
+  @include headerText--small();
   justify-content: flex-end;
-  line-height: 1;
-  margin-top: 6px;
-  max-width: 50%;
 }
 
 .speed-control__slider {
   appearance: none;
   background: $red;
-  height: 4px;
+  height: 5px;
   outline: none;
   width: 100px;
 }

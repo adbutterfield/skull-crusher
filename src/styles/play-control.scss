@@ -1,23 +1,19 @@
 .play-control {
-  color: $text-color;
+  @include headerText--large();
+  align-items: center;
   display: flex;
-  flex: 1 0 50%;
-  font-family: $text-font;
-  font-size: 20px;
-  height: 20px;
   justify-content: flex-end;
-  line-height: 1;
   &:before {
     content: 'PAUSE';
   }
   &:after {
+    @include labelMargin();
     background-image: url('../images/pause.svg');
     background-size: contain;
     content: ' ';
     display: inline-block;
-    height: 20px;
-    margin-left: 4px;
-    width: 20px;
+    height: 18px;
+    width: 18px;
   }
 }
 

@@ -1,5 +1,5 @@
 .canvas {
-  background-color: $main-background-color;
+  background-color: $mainBackgroundColor;
   display: block;
   height: 100%;
   position: fixed;
@@ -27,10 +27,10 @@
     width: 800px;
   }
   &:before {
+    content: ' ';
     display: block;
     height: 100%;
     width: 100%;
-    content: ' ';
   }
 }
 
