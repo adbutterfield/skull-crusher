@@ -8,10 +8,10 @@ import '../styles/main.scss';
 function preloadImages(cb) {
   const imagesToPreload = [spiderWebImg, skullImg, playImg, pauseImg];
   const images = [];
-  for (let i = 0; i < imagesToPreload.length; i++) {
-    images[i] = new Image();
-    images[i].src = imagesToPreload[i];
-  }
+  imagesToPreload.forEach((image, index) => {
+    images[index] = new Image();
+    images[index].src = image;
+  });
   images[images.length - 1].addEventListener('load', () => {
     cb();
   });
