@@ -47,64 +47,81 @@ export default class Fire {
       this.colors[i + 224][1] = 255;
       this.colors[i + 224][2] = 224 + i;
     }
+
+    this.lookupTable = [];
+    for (let i = 1e6; i--; ) {
+      this.lookupTable.push(Math.random());
+    }
+    this.lookupIndex = 0;
+
+    this.bottomLine = canvasWidth * (this.fireHeight - 1);
   }
 
-  draw(ctx, canvasWidth, canvasHeight, isPaused) {
-    if (!isPaused) {
-      let bottomLine = canvasWidth * (this.fireHeight - 1);
-      // draw random pixels at the bottom line
-      for (let x = 0; x < canvasWidth; x++) {
-        this.fire[bottomLine + x] = Math.random() > 0.5 ? 255 : 0;
+  lookup() {
+    return ++this.lookupIndex >= this.lookupTable.length
+      ? this.lookupTable[(this.lookupIndex = 0)]
+      : this.lookupTable[this.lookupIndex];
+  }
+
+  update(canvasWidth) {
+    let bottomLine = this.bottomLine;
+
+    // move flip upwards, start at bottom
+    for (let y = 0; y < this.fireHeight; ++y) {
+      for (let x = 0; x < canvasWidth; ++x) {
+        if (y === 0) {
+          // draw random pixels at the bottom line
+          this.fire[bottomLine + x] = this.lookup() > 0.5 ? 255 : 0;
+        }
+        let value = 0;
+        // Update the fire array
+        if (x === 0) {
+          value =
+            (this.fire[bottomLine] +
+              this.fire[bottomLine] +
+              this.fire[bottomLine - canvasWidth]) /
+            3;
+        } else if (x === canvasWidth - 1) {
+          value =
+            (this.fire[bottomLine + x] +
+              this.fire[bottomLine - canvasWidth + x] +
+              this.fire[bottomLine + x - 1]) /
+            3;
+        } else {
+          value =
+            (this.fire[bottomLine + x] +
+              this.fire[bottomLine + x + 1] +
+              this.fire[bottomLine + x - 1] +
+              this.fire[bottomLine - canvasWidth + x]) /
+            4;
+        }
+        this.fire[bottomLine - canvasWidth + x] = ~~(value > 1
+          ? value - 1
+          : value);
       }
 
-      // move flip upwards, start at bottom
-      for (let y = 0; y < this.fireHeight; ++y) {
-        for (let x = 0; x < canvasWidth; ++x) {
-          let value = 0;
-          // Update the fire array
-          if (x === 0) {
-            value =
-              (this.fire[bottomLine] +
-                this.fire[bottomLine] +
-                this.fire[bottomLine - canvasWidth]) /
-              3;
-          } else if (x === canvasWidth - 1) {
-            value =
-              (this.fire[bottomLine + x] +
-                this.fire[bottomLine - canvasWidth + x] +
-                this.fire[bottomLine + x - 1]) /
-              3;
-          } else {
-            value =
-              (this.fire[bottomLine + x] +
-                this.fire[bottomLine + x + 1] +
-                this.fire[bottomLine + x - 1] +
-                this.fire[bottomLine - canvasWidth + x]) /
-              4;
-          }
+      bottomLine -= canvasWidth;
+    }
+  }
 
-          this.fire[bottomLine - canvasWidth + x] = Math.floor(
-            value > 1 ? value - 1 : value
-          );
-
-          // Update the display data
-          let skipRows = 2;
-          if (y >= skipRows) {
-            let index = y * canvasWidth * 4 + x * 4;
-            let value = this.fire[(y - skipRows) * canvasWidth + x];
-            this.data[index] = this.colors[value][0];
-            this.data[++index] = this.colors[value][1];
-            this.data[++index] = this.colors[value][2];
-            this.data[++index] =
-              !this.colors[value][0] &&
-              !this.colors[value][1] &&
-              this.colors[value][2] <= 255
-                ? 0
-                : 200;
-          }
+  draw(ctx, canvasWidth, canvasHeight) {
+    for (let y = 0; y < this.fireHeight; ++y) {
+      for (let x = 0; x < canvasWidth; ++x) {
+        // Update the display data
+        let skipRows = 2;
+        if (y >= skipRows) {
+          let index = y * canvasWidth * 4 + x * 4;
+          let value = this.fire[(y - skipRows) * canvasWidth + x];
+          this.data[index] = this.colors[value][0];
+          this.data[++index] = this.colors[value][1];
+          this.data[++index] = this.colors[value][2];
+          this.data[++index] =
+            !this.colors[value][0] &&
+            !this.colors[value][1] &&
+            this.colors[value][2] <= 255
+              ? 0
+              : 200;
         }
-
-        bottomLine -= canvasWidth;
       }
     }
 

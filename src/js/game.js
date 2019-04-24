@@ -308,8 +308,7 @@ export default class Game {
     this.components.fire.draw(
       this.fireCtx,
       this.fireCanvas.width,
-      this.fireCanvas.height,
-      this.state.isPaused
+      this.fireCanvas.height
     );
     if (this.state.life === 0) {
       this.gameOver();
@@ -365,6 +364,7 @@ export default class Game {
       this.updateSkulls();
       if (!this.state.isPaused) {
         this.addSkulls();
+        this.components.fire.update(this.fireCanvas.width);
       }
     }
   }
