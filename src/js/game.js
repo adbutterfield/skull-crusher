@@ -190,7 +190,7 @@ export default class Game {
   playControlEvent() {
     // Click event for the pause/resume button
     const gameControlsEl = document.getElementById('game-controls');
-    gameControlsEl.addEventListener('click', () => {
+    gameControlsEl.addEventListener('mousedown', () => {
       if (this.state.life > 0) {
         gameControlsEl.classList.toggle('play-control--paused');
         this.state.isPaused = !this.state.isPaused;
